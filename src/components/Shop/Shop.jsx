@@ -15,6 +15,25 @@ const Shop = () => {
     const { count: totalProducts } = useLoaderData();
     const [currentPage, setCurrentPage] = useState(0);
     const [productsPerPage, setProductsPerPage] = useState(9);
+    const [cartProducts, setCartProducts] = useState();
+    const storedCart = getShoppingCart();
+    const storedCartIds = Object.keys(storedCart);
+
+    const loadCart = async () => {
+        const loadedProducts = await fetch("http://localhost:5000/products", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(storedCartIds),
+        });
+        const cart = await loadedProducts.json();
+
+        return cart;
+    };
+    useEffect(() => {
+        loadCart().then((data) => setCartProducts(data));
+    }, []);
 
     const totalPages = Math.ceil(totalProducts / productsPerPage);
     const pages = [...Array(totalPages).keys()];
@@ -38,7 +57,9 @@ const Shop = () => {
         // step 1: get id of the addedProduct
         for (const id in storedCart) {
             // step 2: get product from products state by using id
-            const addedProduct = products.find((product) => product._id === id);
+            const addedProduct = cartProducts.find(
+                (product) => product._id === id
+            );
             if (addedProduct) {
                 // step 3: add quantity
                 const quantity = storedCart[id];
@@ -50,7 +71,7 @@ const Shop = () => {
         }
         // step 5: set the cart
         setCart(savedCart);
-    }, [products]);
+    }, []);
 
     const handleAddToCart = (product) => {
         // cart.push(product); '
@@ -68,6 +89,7 @@ const Shop = () => {
             newCart = [...remaining, exists];
         }
 
+        loadCart().then((data) => setCartProducts(data));
         setCart(newCart);
         addToDb(product._id);
     };
