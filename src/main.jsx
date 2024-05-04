@@ -8,8 +8,10 @@ import Home from "./components/Layout/Home";
 import Orders from "./components/Orders/Orders";
 import Inventory from "./components/Inventory/Inventory";
 import Login from "./components/Login/Login";
-import cartProductsLoader from "./loaders/cartProductsLoader";
 import Checkout from "./components/Checkout/Checkout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
     {
@@ -19,12 +21,14 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Shop></Shop>,
-                loader: () => fetch("http://localhost:5000/productsCount"),
+                loader: () =>
+                    fetch(
+                        "https://ema-john-pagination-server.onrender.com/productsCount"
+                    ),
             },
             {
                 path: "orders",
                 element: <Orders></Orders>,
-                loader: cartProductsLoader,
             },
             {
                 path: "inventory",
@@ -44,6 +48,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+        </QueryClientProvider>
     </React.StrictMode>
 );

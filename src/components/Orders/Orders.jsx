@@ -1,47 +1,58 @@
-import React, { useState } from 'react';
-import Cart from '../Cart/Cart';
-import { Link, useLoaderData } from 'react-router-dom';
-import ReviewItem from '../ReviewItem/ReviewItem';
-import './Orders.css';
-import { deleteShoppingCart, removeFromDb } from '../../utilities/fakedb';
+import ReviewItem from "../ReviewItem/ReviewItem";
+import "./Orders.css";
+import { useQuery } from "@tanstack/react-query";
+import Sidebar from "../Sidebar/Sidebar";
 
 const Orders = () => {
-    const savedCart = useLoaderData();
-    const [cart, setCart] = useState(savedCart);
+    const {
+        data: cart,
+        isPending,
+        refetch,
+    } = useQuery({
+        queryKey: ["orders"],
+        queryFn: async () => {
+            const res = await fetch(
+                "https://ema-john-pagination-server.onrender.com/cart"
+            );
+            const data = res.json();
+            return data;
+        },
+    });
 
     const handleRemoveFromCart = (id) => {
-        const remaining = cart.filter(product => product._id !== id);
-        console.log(cart, id)
-        setCart(remaining);
-        removeFromDb(id);
-    }
+        // console.log(`https://ema-john-pagination-server.onrender.com/cart/${id}`);
+        fetch(`https://ema-john-pagination-server.onrender.com/cart/${id}`, {
+            method: "DELETE",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                refetch();
+            });
+    };
 
-    const handleClearCart = () => {
-        setCart([]);
-        deleteShoppingCart();
+    if (isPending) {
+        return (
+            <div className="shop-container">
+                <div className="review-container">
+                    <h3>Loading...</h3>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className='shop-container'>
-            <div className='review-container'>
-                {
-                    cart.map(product => <ReviewItem
+        <div className="shop-container">
+            <div className="review-container">
+                {cart?.map((product) => (
+                    <ReviewItem
                         key={product._id}
                         product={product}
                         handleRemoveFromCart={handleRemoveFromCart}
-                    ></ReviewItem>)
-                }
+                    ></ReviewItem>
+                ))}
             </div>
-            <div className='cart-container'>
-                <Cart
-                    cart={cart}
-                    handleClearCart={handleClearCart}
-                >
-                    <Link className='proceed-link' to="/checkout">
-                        <button className='btn-proceed'>Proceed Checkout</button>
-                    </Link>
-                </Cart>
-            </div>
+            <Sidebar refetch={refetch} cart={cart} />
         </div>
     );
 };
