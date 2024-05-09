@@ -12,7 +12,7 @@ const Orders = () => {
         queryKey: ["orders"],
         queryFn: async () => {
             const res = await fetch(
-                "https://ema-john-pagination-server.onrender.com/cart"
+                "https://ema-john-pagination-server-six.vercel.app/cart"
             );
             const data = res.json();
             return data;
@@ -20,8 +20,8 @@ const Orders = () => {
     });
 
     const handleRemoveFromCart = (id) => {
-        // console.log(`https://ema-john-pagination-server.onrender.com/cart/${id}`);
-        fetch(`https://ema-john-pagination-server.onrender.com/cart/${id}`, {
+        // console.log(`https://ema-john-pagination-server-six.vercel.app/cart/${id}`);
+        fetch(`https://ema-john-pagination-server-six.vercel.app/cart/${id}`, {
             method: "DELETE",
         })
             .then((res) => res.json())

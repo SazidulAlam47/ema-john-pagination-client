@@ -23,7 +23,7 @@ const Shop = () => {
         queryKey: ["orders"],
         queryFn: async () => {
             const res = await fetch(
-                "https://ema-john-pagination-server.onrender.com/cart"
+                "https://ema-john-pagination-server-six.vercel.app/cart"
             );
             const data = res.json();
             return data;
@@ -32,7 +32,7 @@ const Shop = () => {
 
     useEffect(() => {
         fetch(
-            `https://ema-john-pagination-server.onrender.com/products?page=${currentPage}&size=${productsPerPage}`
+            `https://ema-john-pagination-server-six.vercel.app/products?page=${currentPage}&size=${productsPerPage}`
         )
             .then((res) => res.json())
             .then((data) => setProducts(data));
@@ -51,7 +51,7 @@ const Shop = () => {
             img,
             shipping,
         };
-        fetch("https://ema-john-pagination-server.onrender.com/cart", {
+        fetch("https://ema-john-pagination-server-six.vercel.app/cart", {
             method: "POST",
             headers: {
                 "content-type": "application/json",

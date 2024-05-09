@@ -23,7 +23,7 @@ const router = createBrowserRouter([
                 element: <Shop></Shop>,
                 loader: () =>
                     fetch(
-                        "https://ema-john-pagination-server.onrender.com/productsCount"
+                        "https://ema-john-pagination-server-six.vercel.app/productsCount"
                     ),
             },
             {

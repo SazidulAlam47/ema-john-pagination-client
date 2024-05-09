@@ -3,7 +3,7 @@ import Cart from "../Cart/Cart";
 
 const Sidebar = ({ refetch, cart }) => {
     const handleClearCart = () => {
-        fetch("https://ema-john-pagination-server.onrender.com/cart", {
+        fetch("https://ema-john-pagination-server-six.vercel.app/cart", {
             method: "DELETE",
         })
             .then((res) => res.json())

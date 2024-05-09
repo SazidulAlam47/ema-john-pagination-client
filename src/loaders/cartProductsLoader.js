@@ -4,7 +4,7 @@ const cartProductsLoader = async () => {
     const storedCart = getShoppingCart();
     const storedCartIds = Object.keys(storedCart);
 
-    const loadedProducts = await fetch('https://ema-john-pagination-server.onrender.com/products', {
+    const loadedProducts = await fetch('https://ema-john-pagination-server-six.vercel.app/products', {
         method: "POST",
         headers: {
             "content-type": "application/json",
